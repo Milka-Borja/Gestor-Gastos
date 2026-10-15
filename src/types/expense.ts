@@ -15,8 +15,9 @@ export interface Expense {
   id: string;
   amount: number; // en dolares
   category: Category;
-  date: Date;
+  date: string | Date;
   description?: string;
+  invoiceUri?: string;
 }
 
 // Mismo orden en que se muestran en el selector del modal

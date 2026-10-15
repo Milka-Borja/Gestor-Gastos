@@ -1,24 +1,22 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withSequence,
 } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 import { GlassCard } from './GlassCard';
 import { LiquidGlassColors, Spacing } from '@/constants/theme';
 import { useExpenses } from '@/context/ExpenseContext';
 
-// Muestra el mes y el total gastado
 export const MonthlyHeader: React.FC = () => {
   const { getMonthlyTotal } = useExpenses();
   const total = getMonthlyTotal();
 
   const scale = useSharedValue(1);
 
-  // Cada vez que cambia el total, el numero "late" un poco
   useEffect(() => {
     scale.value = withSequence(
       withSpring(1.05),
@@ -30,8 +28,7 @@ export const MonthlyHeader: React.FC = () => {
     transform: [{ scale: scale.value }],
   }));
 
-  // Sale en minuscula ("octubre de 2026"); la mayuscula la pone el estilo
-  const currentMonth = new Date().toLocaleDateString('es-ES', {
+  const currentMonth = new Date().toLocaleDateString('es-EC', {
     month: 'long',
     year: 'numeric',
   });
@@ -46,19 +43,16 @@ export const MonthlyHeader: React.FC = () => {
     <View style={styles.container}>
       <GlassCard style={styles.card}>
         <LinearGradient
-          // Con algo de transparencia para que se vea el blur de la tarjeta
-          colors={['rgba(255, 107, 157, 0.7)', 'rgba(196, 69, 105, 0.7)']}
+          colors={['rgba(255, 107, 157, 0.76)', 'rgba(196, 69, 105, 0.82)']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={styles.gradient}
+          style={styles.cardBackground}
         >
-          <View style={styles.content}>
-            <Text style={styles.monthText}>{currentMonth}</Text>
-            <Animated.View style={animatedStyle}>
-              <Text style={styles.totalLabel}>Total gastado</Text>
-              <Text style={styles.totalAmount}>{formattedTotal}</Text>
-            </Animated.View>
-          </View>
+          <Text style={styles.monthText}>{currentMonth}</Text>
+          <Animated.View style={animatedStyle}>
+            <Text style={styles.totalLabel}>Total gastado del mes</Text>
+            <Text style={styles.totalAmount}>{formattedTotal}</Text>
+          </Animated.View>
         </LinearGradient>
       </GlassCard>
     </View>
@@ -72,11 +66,9 @@ const styles = StyleSheet.create({
   card: {
     overflow: 'hidden',
   },
-  gradient: {
+  cardBackground: {
     padding: Spacing.four,
     borderRadius: Spacing.three,
-  },
-  content: {
     alignItems: 'center',
   },
   monthText: {
@@ -85,14 +77,12 @@ const styles = StyleSheet.create({
     color: LiquidGlassColors.glassTextLight,
     textTransform: 'capitalize',
     marginBottom: Spacing.two,
-    opacity: 0.9,
   },
   totalLabel: {
     fontSize: 14,
-    color: LiquidGlassColors.glassTextLight,
+    color: 'rgba(255, 251, 245, 0.82)',
     marginBottom: Spacing.one,
     textAlign: 'center',
-    opacity: 0.8,
   },
   totalAmount: {
     fontSize: 42,
